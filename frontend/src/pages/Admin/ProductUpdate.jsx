@@ -125,6 +125,11 @@ const AdminProductUpdate = () => {
       });
     }
   };
+  useEffect(() => {
+    if (categories && categories.length > 0) {
+      setCategory(categories[0]._id); // Set the first category as default
+    }
+  }, [categories]);
 
   return (
     <>
