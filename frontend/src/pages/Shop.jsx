@@ -18,7 +18,7 @@ const Shop = () => {
   );
 
   const categoriesQuery = useFetchCategoriesQuery();
-  const [priceFilter, setPriceFilter] = useState("");
+  const [priceRange, setPriceRange] = useState([]);
 
   const filteredProductsQuery = useGetFilteredProductsQuery({
     checked,
@@ -34,15 +34,15 @@ const Shop = () => {
   useEffect(() => {
     if (!filteredProductsQuery.isLoading) {
       const filteredProducts = filteredProductsQuery.data.filter((product) => {
-        return (
-          product.price.toString().includes(priceFilter) ||
-          product.price === parseInt(priceFilter, 10)
-        );
+        const withinPriceRange =
+          priceRange.length === 0 ||
+          (product.price >= priceRange[0] && product.price <= priceRange[1]);
+        return withinPriceRange;
       });
 
       dispatch(setProducts(filteredProducts));
     }
-  }, [checked, radio, filteredProductsQuery.data, dispatch, priceFilter]);
+  }, [checked, radio, filteredProductsQuery.data, dispatch, priceRange]);
 
   const handleBrandClick = (brand) => {
     const productsByBrand = filteredProductsQuery.data?.filter(
@@ -68,8 +68,8 @@ const Shop = () => {
     ),
   ];
 
-  const handlePriceChange = (e) => {
-    setPriceFilter(e.target.value);
+  const handlePriceRange = (range) => {
+    setPriceRange(range);
   };
 
   return (
@@ -131,13 +131,28 @@ const Shop = () => {
             </h2>
 
             <div className="p-5 w-[15rem]">
-              <input
-                type="text"
-                placeholder="Enter Price"
-                value={priceFilter}
-                onChange={handlePriceChange}
-                className="w-full px-3 py-2 placeholder-gray-400 border rounded-lg focus:outline-none focus:ring focus:border-pink-300 text-black"
-              />
+              {[
+                [1, 1000],
+                [1001, 2000],
+                [2001, 5000],
+                [5001, 10000],
+                [10001, 20000],
+                [20001, 30000],
+                [30001, 40000],
+                [40001, 50000],
+              ].map((range, index) => (
+                <div key={index} className="flex items-center mb-2">
+                  <input
+                    type="radio"
+                    name="price"
+                    onChange={() => handlePriceRange(range)}
+                    className="w-4 h-4 text-pink-400 bg-gray-100 border-gray-300 focus:ring-pink-500"
+                  />
+                  <label className="ml-2 text-sm font-medium text-white">
+                    ${range[0]} - ${range[1]}
+                  </label>
+                </div>
+              ))}
             </div>
 
             <div className="p-5 pt-0">
