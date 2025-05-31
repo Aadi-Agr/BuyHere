@@ -18,7 +18,8 @@ const Shop = () => {
   );
 
   const categoriesQuery = useFetchCategoriesQuery();
-  const [priceRange, setPriceRange] = useState([]);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(50000);
 
   const filteredProductsQuery = useGetFilteredProductsQuery({
     checked,
@@ -34,15 +35,19 @@ const Shop = () => {
   useEffect(() => {
     if (!filteredProductsQuery.isLoading) {
       const filteredProducts = filteredProductsQuery.data.filter((product) => {
-        const withinPriceRange =
-          priceRange.length === 0 ||
-          (product.price >= priceRange[0] && product.price <= priceRange[1]);
-        return withinPriceRange;
+        return product.price >= minPrice && product.price <= maxPrice;
       });
 
       dispatch(setProducts(filteredProducts));
     }
-  }, [checked, radio, filteredProductsQuery.data, dispatch, priceRange]);
+  }, [
+    checked,
+    radio,
+    filteredProductsQuery.data,
+    dispatch,
+    minPrice,
+    maxPrice,
+  ]);
 
   const handleBrandClick = (brand) => {
     const productsByBrand = filteredProductsQuery.data?.filter(
@@ -67,10 +72,6 @@ const Shop = () => {
       )
     ),
   ];
-
-  const handlePriceRange = (range) => {
-    setPriceRange(range);
-  };
 
   return (
     <>
@@ -130,29 +131,35 @@ const Shop = () => {
               Filter by Price
             </h2>
 
-            <div className="p-5 w-[15rem]">
-              {[
-                [1, 1000],
-                [1001, 2000],
-                [2001, 5000],
-                [5001, 10000],
-                [10001, 20000],
-                [20001, 30000],
-                [30001, 40000],
-                [40001, 50000],
-              ].map((range, index) => (
-                <div key={index} className="flex items-center mb-2">
-                  <input
-                    type="radio"
-                    name="price"
-                    onChange={() => handlePriceRange(range)}
-                    className="w-4 h-4 text-pink-400 bg-gray-100 border-gray-300 focus:ring-pink-500"
-                  />
-                  <label className="ml-2 text-sm font-medium text-white">
-                    ${range[0]} - ${range[1]}
-                  </label>
-                </div>
-              ))}
+            <div className="p-5 w-[15rem] text-white">
+              <div className="flex justify-between text-sm mb-2">
+                <span>${minPrice}</span>
+                <span>${maxPrice}</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="50000"
+                step="100"
+                value={minPrice}
+                onChange={(e) => {
+                  const value = Number(e.target.value);
+                  if (value <= maxPrice) setMinPrice(value);
+                }}
+                className="w-full mb-2"
+              />
+              <input
+                type="range"
+                min="0"
+                max="50000"
+                step="100"
+                value={maxPrice}
+                onChange={(e) => {
+                  const value = Number(e.target.value);
+                  if (value >= minPrice) setMaxPrice(value);
+                }}
+                className="w-full"
+              />
             </div>
 
             <div className="p-5 pt-0">
