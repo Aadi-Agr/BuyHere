@@ -1,6 +1,7 @@
 // packages
 import path from "path";
 import express from "express";
+const cors = require("cors");
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
@@ -18,7 +19,14 @@ const port = process.env.PORT || 5000;
 connectDB();
 
 const app = express();
-
+app.use(
+  cors({
+    origin:
+      "https://buy-here-git-main-aaditya-agrawals-projects-e8672fba.vercel.app/",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
