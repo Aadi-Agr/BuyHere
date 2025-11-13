@@ -22,9 +22,10 @@ const app = express();
 app.use(
   cors({
     origin:
-      "https://buy-here-git-main-aaditya-agrawals-projects-e8672fba.vercel.app/",
+      "https://buy-here-git-main-aaditya-agrawals-projects-e8672fba.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 app.use(express.json());
