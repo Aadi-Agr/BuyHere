@@ -1,7 +1,7 @@
 // packages
 import path from "path";
 import express from "express";
-const cors = require("cors");
+import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
