@@ -22,3 +22,4 @@ have to initialize .env file and make keys like
 3. NODE_ENV="can be anything"
 4. JWT_SECRET="any secreat used in jwt"
 5. PAYPAL_CLIENT_ID="ID of paypal of the client"
+# BuyHere
